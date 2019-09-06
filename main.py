@@ -134,14 +134,16 @@ def calculate_cost_accessory():
 	print('With {} iterations, it took an average of {} manos accessories, {} concentrated black crystals, with an average cost of {}.'.format(
 		manos.iterations, average_accessory/manos.iterations, average_c_black_crystal/manos.iterations, total_cost/manos.iterations))
 		
-def mem_fragment():
+def mem_fragment(num):
 	global average_memory_fragment
-	if manos.art:
-		average_memory_fragment += 2.5
-		return memory_fragment * 2.5
-	else:
-		average_memory_fragment += 10
-		return memory_fragment * 10
+	if num > 0:
+		if manos.art:
+			average_memory_fragment += 2.5 * num
+			return memory_fragment * 2.5 * num
+		else:
+			average_memory_fragment += 10 * num
+			return memory_fragment * 10 * num
+	return 0
 		
 def roll_success(chance):
 	attempts = 0
@@ -159,37 +161,37 @@ def one_to_pri():
 	total_cost_armor += 5 * average_armor_black_crystal  # 1 to 5
 	attempts = roll_success(90)
 	average_armor_black_crystal += attempts * 2
-	total_cost_armor += (attempts * 2 * black_crystal) + ((attempts - 1) * mem_fragment())  # 6
+	total_cost_armor += (attempts * 2 * black_crystal) + (mem_fragment(attempts - 1))  # 6
 	attempts = roll_success(80)
 	average_armor_black_crystal += attempts * 2
-	total_cost_armor += (attempts * 2 * black_crystal) + ((attempts - 1) * mem_fragment())  # 7
+	total_cost_armor += (attempts * 2 * black_crystal) + (mem_fragment(attempts - 1))  # 7
 	attempts = roll_success(70)
 	average_armor_black_crystal += attempts * 2
-	total_cost_armor += (attempts * 2 * black_crystal) + ((attempts - 1) * mem_fragment())  # 8
+	total_cost_armor += (attempts * 2 * black_crystal) + (mem_fragment(attempts - 1))  # 8
 	attempts = roll_success(60)
 	average_armor_black_crystal += attempts * 3
-	total_cost_armor += (attempts * 3 * black_crystal) + ((attempts - 1) * mem_fragment())  # 9
+	total_cost_armor += (attempts * 3 * black_crystal) + (mem_fragment(attempts - 1))  # 9
 	attempts = roll_success(50)
 	average_armor_black_crystal += attempts * 3
-	total_cost_armor += (attempts * 3 * black_crystal) + ((attempts - 1) * mem_fragment())  # 10
+	total_cost_armor += (attempts * 3 * black_crystal) + (mem_fragment(attempts - 1))  # 10
 	attempts = roll_success(40)
 	average_armor_black_crystal += attempts * 3
-	total_cost_armor += (attempts * 3 * black_crystal) + ((attempts - 1) * mem_fragment())  # 11
+	total_cost_armor += (attempts * 3 * black_crystal) + (mem_fragment(attempts - 1))  # 11
 	attempts = roll_success(30)
 	average_armor_black_crystal += attempts * 4
-	total_cost_armor += (attempts * 4 * black_crystal) + ((attempts - 1) * mem_fragment())  # 12
+	total_cost_armor += (attempts * 4 * black_crystal) + (mem_fragment(attempts - 1))  # 12
 	attempts = roll_success(20)
 	average_armor_black_crystal += attempts * 4
-	total_cost_armor += (attempts * 4 * black_crystal) + ((attempts - 1) * mem_fragment())  # 13
+	total_cost_armor += (attempts * 4 * black_crystal) + (mem_fragment(attempts - 1))  # 13
 	attempts = roll_success(15)
 	average_armor_black_crystal += attempts * 5
-	total_cost_armor += (attempts * 5 * black_crystal) + ((attempts - 1) * mem_fragment())  # 14
+	total_cost_armor += (attempts * 5 * black_crystal) + (mem_fragment(attempts - 1))  # 14
 	attempts = roll_success(10)
 	average_armor_black_crystal += attempts * 5
-	total_cost_armor += (attempts * 5 * black_crystal) + ((attempts - 1) * mem_fragment())  # 15
+	total_cost_armor += (attempts * 5 * black_crystal) + (mem_fragment(attempts - 1))  # 15
 	attempts = roll_success(30)
 	average_armor_c_black_crystal += attempts
-	total_cost_armor += (attempts * 1 * c_black_crystal) + ((attempts - 1) * mem_fragment())  # pri
+	total_cost_armor += (attempts * 1 * c_black_crystal) + (mem_fragment(attempts - 1))  # pri
 
 
 def pen_arm_attempt(level):
@@ -200,7 +202,7 @@ def pen_arm_attempt(level):
 			total_cost_armor += c_black_crystal
 			return level + 1
 		else:
-			total_cost_armor += c_black_crystal + mem_fragment()
+			total_cost_armor += c_black_crystal + mem_fragment(1)
 			
 			return level - 1
 	return tet_arm_attempt(level)
@@ -215,7 +217,7 @@ def tet_arm_attempt(level):
 			total_cost_armor += c_black_crystal
 			return level + 1
 		else:
-			total_cost_armor += c_black_crystal + mem_fragment()
+			total_cost_armor += c_black_crystal + mem_fragment(1)
 			return level - 1
 	return tri_arm_attempt(level)
 	
@@ -228,7 +230,7 @@ def tri_arm_attempt(level):
 			total_cost_armor += c_black_crystal
 			return level + 1
 		else:
-			total_cost_armor += c_black_crystal + mem_fragment()
+			total_cost_armor += c_black_crystal + mem_fragment(1)
 			return level - 1
 	return duo_arm_attempt(level)
 	
@@ -240,7 +242,7 @@ def duo_arm_attempt(level):
 		total_cost_armor += c_black_crystal
 		return level + 1
 	else:
-		total_cost_armor += c_black_crystal + mem_fragment()
+		total_cost_armor += c_black_crystal + mem_fragment(1)
 		return 2
 		
 		
@@ -259,12 +261,15 @@ def calculate_cost_armor():
 				level = tet_arm_attempt(level)
 			elif manos_level == 5:
 				level = pen_arm_attempt(level)
+			else:
+				level + 1
 				
 	if(manos.art):
+		_get_values()
 		print('With {} iterations, it took an average of {} black crystals, {} concentrated black crystals, {} memory fragments, {} artisan memories.'.format(manos.iterations, average_armor_black_crystal/manos.iterations, 
 																																							average_armor_c_black_crystal/manos.iterations, average_memory_fragment/
-																																							manos.iterations, (average_memory_fragment*2.5)/(4*manos.iterations)))
-		print('For a total of {} silver and {} pearls (assuming 100 bundle)'.format((average_armor_black_crystal/manos.iterations)*black_crystal + (average_armor_c_black_crystal/manos.iterations)*c_black_crystal + (average_memory_fragment/manos.iterations)*memory_fragment, (average_memory_fragment*2.5*40)/(manos.iterations*4)))
+																																							manos.iterations, (average_memory_fragment)/(4*manos.iterations)))
+		print('For a total of {} silver and {} pearls (assuming 100 bundle)'.format((average_armor_black_crystal/manos.iterations)*black_crystal + (average_armor_c_black_crystal/manos.iterations)*c_black_crystal + ((average_memory_fragment)/(manos.iterations)*memory_fragment), (average_memory_fragment*40)/(4*manos.iterations)))
 	else:
 		print('With {} iterations, it took an average of {} black crystals, {} concentrated black crystals, {} memory fragments.'.format(manos.iterations, average_armor_black_crystal/manos.iterations, 
 																																							average_armor_c_black_crystal/manos.iterations, average_memory_fragment/
